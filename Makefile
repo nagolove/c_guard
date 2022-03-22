@@ -9,17 +9,25 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug)
+  mem_guard_test_config = debug
   mem_guard_config = debug
 endif
 ifeq ($(config),release)
+  mem_guard_test_config = release
   mem_guard_config = release
 endif
 
-PROJECTS := mem_guard
+PROJECTS := mem_guard_test mem_guard
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
+
+mem_guard_test:
+ifneq (,$(mem_guard_test_config))
+	@echo "==== Building mem_guard_test ($(mem_guard_test_config)) ===="
+	@${MAKE} --no-print-directory -C . -f mem_guard_test.make config=$(mem_guard_test_config)
+endif
 
 mem_guard:
 ifneq (,$(mem_guard_config))
@@ -28,6 +36,7 @@ ifneq (,$(mem_guard_config))
 endif
 
 clean:
+	@${MAKE} --no-print-directory -C . -f mem_guard_test.make clean
 	@${MAKE} --no-print-directory -C . -f mem_guard.make clean
 
 help:
@@ -40,6 +49,7 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
+	@echo "   mem_guard_test"
 	@echo "   mem_guard"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"
