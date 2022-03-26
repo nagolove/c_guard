@@ -1,3 +1,5 @@
+#pragma once
+
 #include <lua.h>
 #include <stdio.h>
 #include <stdbool.h>
